@@ -1,0 +1,10 @@
+{
+  "name": "node-sway",
+  "version": "0.5.0",
+  "description": "nodejs library for interacting with sway ipc",
+  "main": "index.mjs",
+  "author": "dlasky",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {}
+}
