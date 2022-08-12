@@ -1,20 +1,22 @@
 import net from 'net'
 import { EventEmitter } from 'events'
-import {Types, message, readMessage} from './message.mjs'
+import { message, Types } from './message'
+import type {MsgType} from "./message"
 
 export default class SwayIPC extends EventEmitter {
 
-    types = Types
+    static types = Types
+    private socket : net.Socket
 
     constructor() {
         super()
-        const sway = process.env.SWAYSOCK
+        const sway = process.env.SWAYSOCK ?? ''
         this.socket = net.createConnection(sway)
         this.socket.on('data', this.handleData)
     }
 
-    handleData = (data) => {
-        const str = data.slice(14, data.length)
+    handleData = (data : Buffer) => {
+        const str = data.slice(14, data.length).toString()
         try {
             this.emit("data", JSON.parse(str))
         } catch (e) {
@@ -22,7 +24,7 @@ export default class SwayIPC extends EventEmitter {
         }
     }
 
-    send = (type, value) => {
+    send = (type:MsgType, value: string) => {
         const msg = message(type, value)
         this.socket.write(msg)
     }

@@ -1,7 +1,10 @@
 import os from 'os'
 
-export const Types = {
-  RUN_COMMAND: 0, //Runs the payload as sway commands
+export type MsgType = number
+export type MsgTypes = Record<string,MsgType>
+
+export const Types : MsgTypes = {
+  RUN_COMMAND: 0 as MsgType, //Runs the payload as sway commands
   GET_WORKSPACES: 1, //Get the list of current workspaces
   SUBSCRIBE: 2, //Subscribe the IPC connection to the events listed in the payload
   GET_OUTPUTS: 3, //Get the list of current outputs
@@ -22,18 +25,18 @@ const magic = Buffer.from('i3-ipc')
 
 const end = os.endianness()
 
-export const message = (type, value) => {
+const writeInt32 = (buf:Buffer, value:number, offset?:number) => {
+  if (end === "BE") {
+  return buf.writeInt32BE(value, offset)
+  }
+  return buf.writeInt32LE(value, offset)
+}
+
+export const message = (type : MsgType, value : string) => {
     const msg = Buffer.from(value ?? '')
     const len = msg.length
     const buf = Buffer.alloc(8)
-    buf['writeInt32'+end](len)
-    buf['writeInt32'+end](type,4)
-    readMessage(Buffer.concat([magic, buf]))
+    writeInt32(buf,len)
+    writeInt32(buf, type, 4)
     return Buffer.concat([magic, buf, msg])
-}
-
-export const readMessage = (buf) => {
-    const type = buf.readInt32LE(6)
-    const len = buf.readInt32LE(10)
-    console.log({type, len})
 }
