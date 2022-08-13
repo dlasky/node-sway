@@ -1,7 +1,8 @@
 import net from 'net'
 import { EventEmitter } from 'events'
-import { writeMessage, readMessage, Types } from './message'
-import type {MsgType} from "./message"
+import { writeMessage, readMessage } from './message'
+import { Types } from './constants'
+import type { MsgType } from './types'
 
 export default class SwayIPC extends EventEmitter {
 
@@ -18,16 +19,11 @@ export default class SwayIPC extends EventEmitter {
     handleData = (data : Buffer) => {
         this.emit("rawData", data.toString())
         const msg = readMessage(data)
-        try {
-            const parsed = JSON.parse(msg.value)
-            this.emit("data", parsed)
-        } catch (e) {
-            this.emit("error", e)
-        }
+        this.emit("data", msg)
     }
 
-    send = (type:MsgType, value: string) => {
-        const msg = writeMessage(type, value)
+    send = (type:MsgType, value?: string) => {
+        const msg = writeMessage(type, value ?? '')
         this.socket.write(msg)
     }
 }

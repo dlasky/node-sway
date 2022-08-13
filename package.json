@@ -13,11 +13,15 @@
   "private": false,
   "dependencies": {},
   "devDependencies": {
+    "@ava/typescript": "^3.0.1",
     "@types/node": "^18.7.2",
+    "ava": "^4.3.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "build": "yarn run tsc --build"
+    "build": "yarn run tsc --build",
+    "test": "yarn build && ava",
+    "clean": "yarn run tsc --build --clean"
   }
 }

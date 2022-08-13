@@ -10,5 +10,6 @@
     "esModuleInterop": true,
     "strict": true,
     "noImplicitAny": true
-  }
+  },
+  // "exclude": ["*.test.ts"]
 }
