@@ -22,6 +22,7 @@ const readInt32 = (buf: Buffer, offset?: number) => {
 //<magic><i32 len><i32 type><msg>
 
 export const writeMessage = (type: MsgType, value: string) => {
+  console.log(type, value)
   const msg = Buffer.from(value ?? "");
   const len = msg.length;
   const buf = Buffer.alloc(8);

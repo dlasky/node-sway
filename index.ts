@@ -28,7 +28,7 @@ export default class SwayIPC extends EventEmitter {
     }
 
     subscribe = (events: EventType[]) => {
-        const strEvents = events.map(evt => EventType[evt])
+        const strEvents = events.map(evt => EventType[evt].toLowerCase())
         this.send(MsgType.SUBSCRIBE, JSON.stringify(strEvents))
     }
 }
