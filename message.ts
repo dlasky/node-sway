@@ -7,16 +7,16 @@ const end = os.endianness();
 
 const writeInt32 = (buf: Buffer, value: number, offset?: number) => {
   if (end === "BE") {
-    return buf.writeInt32BE(value, offset);
+    return buf.writeUInt32BE(value, offset);
   }
-  return buf.writeInt32LE(value, offset);
+  return buf.writeUInt32LE(value, offset);
 };
 
 const readInt32 = (buf: Buffer, offset?: number) => {
   if (end === "BE") {
-    return buf.readInt32BE(offset);
+    return buf.readUInt32BE(offset);
   }
-  return buf.readInt32LE(offset);
+  return buf.readUInt32LE(offset);
 };
 
 //<magic><i32 len><i32 type><msg>
