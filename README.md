@@ -5,11 +5,13 @@ Exposes a simple interface for interacting with swaywm's unix IPC socket.
 #### Example:
 
 ```javascript
+//const SwayIPC = require("node-sway").default;
 import SwayIPC from 'node-sway'
 
 const ipc = new SwayIPC()
-ipc.on('data', data => console.log(data))
-ipc.send(ipc.types.GET_VERSION)
+ipc.on('data', ({data,type}) => console.log(type, data))
+ipc.send(SwayIPC.types.GET_VERSION)
+ipc.subscribe([SwayIPC.events.WINDOW])
 ```
 
 #### Available Message Types (see `man sway-ipc` for details)

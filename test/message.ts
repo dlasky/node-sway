@@ -1,7 +1,6 @@
 import test from "ava";
-import { assert } from "console";
 import { randomBytes } from "crypto";
-import { Types } from "../constants";
+import { MsgType } from "../types";
 import { writeMessage, readMessage } from "../message";
 
 test("roundtrip string", (t) => {
@@ -13,9 +12,9 @@ test("roundtrip string", (t) => {
 
 test("roundtrip json", (t) => {
   const test = { aces: "yes", ok: true, something: 12345 };
-  const buf = writeMessage(Types.GET_INPUTS, JSON.stringify(test));
+  const buf = writeMessage(MsgType.GET_INPUTS, JSON.stringify(test));
   const msg = readMessage(buf);
-  t.assert(msg.type === Types.GET_INPUTS, "message type");
+  t.assert(msg.type === MsgType.GET_INPUTS, "message type");
   t.deepEqual(msg.data, test, "data");
   t.assert(msg.value === JSON.stringify(test));
 });
@@ -27,7 +26,7 @@ test("workspaces read", (t) => {
   );
   const msg = readMessage(buf);
   t.assert(msg.data.length === 5, "workspace count");
-  t.assert(msg.type === Types.GET_WORKSPACES, "message type");
+  t.assert(msg.type === MsgType.GET_WORKSPACES, "message type");
 });
 
 test('unparsable', (t) => {

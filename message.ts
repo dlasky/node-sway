@@ -1,5 +1,5 @@
 import os from "os";
-import type { MsgType, RawMessage } from "types";
+import { EventType, MsgType, RawMessage } from "./types";
 
 const magic = Buffer.from("i3-ipc");
 
