@@ -30,12 +30,14 @@ export const writeMessage = (type: MsgType, value: string) => {
   return Buffer.concat([magic, buf, msg]);
 };
 
-export const readMessage = (buf: Buffer): RawMessage => {
-  if (magic.compare(buf, 0, magic.length) === 0) {
-    let lenOffset = magic.length;
+export const readMessage = (buf: Buffer, offset:number = 0 ): RawMessage => {
+  if (magic.compare(buf, offset, offset+magic.length) === 0) {
+    let lenOffset = offset + magic.length;
     const len = readInt32(buf, lenOffset);
-    const typ = readInt32(buf, lenOffset + 4);
-    const msg = buf.subarray(lenOffset + 8, len + 6 + 8);
+    lenOffset+=4
+    const typ = readInt32(buf, lenOffset);
+    lenOffset+=4
+    const msg = buf.subarray(lenOffset, len + lenOffset);
     let data: Record<string, any>;
     try {
       data = JSON.parse(msg.toString());
@@ -46,8 +48,21 @@ export const readMessage = (buf: Buffer): RawMessage => {
       type: typ,
       value: msg.toString(),
       data,
+      start:offset,
+      end:len + lenOffset
     };
   } else {
     throw new Error("message is missing magic string:" + buf.toString());
   }
 };
+
+export const readMessages = (buff: Buffer): RawMessage[] => {
+  let offset = 0
+  let messages : RawMessage[] = []
+  while(offset < buff.length) {
+    const msg = readMessage(buff, offset)
+    offset = msg.end
+    messages.push(msg)
+  }
+  return messages
+}

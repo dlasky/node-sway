@@ -35,4 +35,6 @@ export type RawMessage = {
   type: MsgType;
   value: string;
   data: JSONLike;
+  start: number;
+  end: number;
 };
